@@ -1,17 +1,22 @@
-import React from 'react'
+import React, { Fragment, useContext, useEffect } from 'react'
 import Form from '../components/form'
+import Loader from '../components/loader'
 import Notes from '../components/notes'
+import { FirebaseContext } from '../context/firebase/firebaseContext'
 
 const Home = () => {
-  const notes = new Array(3)
-    .fill('')
-    .map((_, index) => ({ id: index, title: `Note ${index + 1}` }))
+  const { loading, notes, fetchNotes, removeNote } = useContext(FirebaseContext)
+
+  useEffect(() => {
+    fetchNotes()
+  }, [])
+
   return (
-    <React.Fragment>
+    <Fragment>
       <Form />
       <hr />
-      <Notes notes={notes} />
-    </React.Fragment>
+      {loading ? <Loader /> : <Notes notes={notes} onRemove={removeNote} />}
+    </Fragment>
   )
 }
 
